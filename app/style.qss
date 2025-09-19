@@ -1,0 +1,98 @@
+/* окно */
+QMainWindow {
+    background: #f7f8fb;
+}
+
+/* заголовок */
+QLabel#title {
+    font: 600 18px "Segoe UI", system-ui;
+    color: #1f2937;
+}
+
+QLabel{
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+}
+
+/* кнопки — общий вид */
+QPushButton {
+    font: 500 14px "Segoe UI", system-ui;
+    padding: 10px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    background: #ffffff;
+}
+QPushButton:hover {
+    border-color: #9aa4b2;
+}
+QPushButton:pressed {
+    background: #eef1f6;
+}
+
+/* акцент по id */
+QPushButton#btnSchema { background: #eaf2ff; border-color: #000000; }
+QPushButton#btnAdd    { background: #eaf9ef; border-color: #000000; }
+QPushButton#btnShow   { background: #fff6e9; border-color: #000000; }
+
+/* корпус */
+QDateEdit, QComboBox,QLineEdit {
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    background: #e6e8eb;
+    padding: 6px 36px 6px 10px;
+}
+
+/* правая кнопка с округлением */
+QDateEdit::drop-down,
+QComboBox::drop-down {
+    width: 28px;
+    border: none;
+    margin: 0;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    background: transparent;
+}
+
+/* САМА стрелка — укажем картинку */
+QDateEdit::down-arrow,
+QComboBox::down-arrow {
+    image: url("app/icons/chevron-down.svg");  /* путь относительно запуска */
+    width: 12px;
+    height: 12px;
+}
+
+/* небольшой ховер по кнопке */
+QDateEdit::drop-down:hover,
+QComboBox::drop-down:hover { background: rgba(0,0,0,.05); }
+QDateEdit::drop-down:pressed,
+QComboBox::drop-down:pressed{ background: rgba(0,0,0,.08); }
+
+QTableView {
+    background: #fff;
+    border-radius: 10px;
+    gridline-color: #e5e7eb;
+
+}
+QHeaderView::section {
+    background: #838383;
+    padding: 6px 8px;
+    border: 0;
+    border-right: 1px solid #e5e7eb;
+    border-right: 1px solid #e5e7eb;  /* вертикальные разделители между секциями */
+    border-bottom: 1px solid #e5e7eb; /* линия под шапкой */
+}
+
+QTableCornerButton::section {
+    background: #838383;
+    border: 0;
+    border-top-left-radius: 10px;
+    border-right: 1px solid #e5e7eb;
+    border-bottom: 1px solid #e5e7eb;
+}
+QHeaderView::section:horizontal:last {
+    border-top-right-radius: 10px;
+    border-right: none;                /* ← убрать правую линию у последней секции */
+    margin-right: -1px;                /* ← перекрыть внешнюю рамку таблицы */
+}
+
+
