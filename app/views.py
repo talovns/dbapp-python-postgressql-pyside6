@@ -1,18 +1,19 @@
+import logging
 from PySide6.QtWidgets import QDialog
 from PySide6.QtCore import QDate
 from PySide6.QtGui import QStandardItemModel, QStandardItem
-from .ui.ui_report_dialog import Ui_ReportDialog      # ← сгенерированный класс
+
+from .ui.ui_report_dialog import Ui_ReportDialog
 from . import db
+from .audit import log_action
+
+log = logging.getLogger(__name__)
 
 class ReportDialog(QDialog, Ui_ReportDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(self)
 
-        self.tableView.horizontalHeader().setStretchLastSection(True)
-        self.tableView.setShowGrid(True)
-
-        # предзаполнение фильтров
         self.fromDate.setCalendarPopup(True)
         self.toDate.setCalendarPopup(True)
         self.fromDate.setDate(QDate.currentDate().addMonths(-1))
@@ -20,7 +21,16 @@ class ReportDialog(QDialog, Ui_ReportDialog):
         if self.categoryCombo.count() == 0:
             self.categoryCombo.addItems(["(все)","Food","Transport","Entertainment","Health","Education","Utilities","Other"])
 
-        self.applyBtn.clicked.connect(self.refresh)
+        self.applyBtn.clicked.connect(self.on_apply)
+        log_action("report_open")
+        self.refresh()
+
+    def on_apply(self):
+        fdate = self.fromDate.date().toString("yyyy-MM-dd")
+        tdate = self.toDate.date().toString("yyyy-MM-dd")
+        cat = None if self.categoryCombo.currentIndex() == 0 else self.categoryCombo.currentText()
+        q = self.queryEdit.text().strip() or None
+        log_action("report_apply_filters", date_from=fdate, date_to=tdate, category=cat, query=bool(q))
         self.refresh()
 
     def refresh(self):
@@ -43,6 +53,8 @@ class ReportDialog(QDialog, Ui_ReportDialog):
         ORDER BY e.spent_at DESC, e.created_at DESC;
         """
         rows = db.fetchall(sql, [username, fdate, fdate, tdate, tdate, cat, cat, q, q, q])
+
+        log_action("report_rows_loaded", count=len(rows))
 
         model = QStandardItemModel(0, 6)
         model.setHorizontalHeaderLabels(["Дата","Сумма","Категория","Оплата","Магазин","Заметка"])
